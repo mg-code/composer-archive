@@ -95,33 +95,23 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Returns latest archive by version number
-     * @param $version
-     * @return null
+     * Returns archive location, if exists
+     * @return null|string
      * @throws \Exception
      */
-    protected function getLastArchiveByVersion($version)
+    protected function getArchive()
     {
         $finder = new Finder();
         $finder
             ->files()
-            ->name("*-{$version}.tar.gz")
+            ->name("vendors.tar.gz")
             ->in($this->getArchiveDir());
 
-        $archives = [];
         foreach($finder as $file) {
             /** @var \Symfony\Component\Finder\SplFileInfo $file */
-            $explode = explode('-', $file->getRelativePathname());
-            $time = $explode[0];
-            $archives[$time] = $file->getPathname();
+            return $file->getPathname();
         }
-
-        if(!$archives) {
-            return null;
-        }
-
-        krsort($archives);
-        return array_values($archives)[0];
+        return null;
     }
 
     /**

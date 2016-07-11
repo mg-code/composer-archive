@@ -12,11 +12,14 @@ namespace app\archiver;
  */
 class PharArchiver
 {
-    public function archive($sources, $archiveDir, $version, array $excludes = [])
+    public function archive($sources, $archiveDir, array $excludes = [])
     {
         $sources = realpath($sources);
-        $time = time();
-        $target = "{$archiveDir}/{$time}-{$version}.tar";
+        $target = "{$archiveDir}/vendors.tar";
+        
+        if(file_exists($target.'.gz')) {
+            unlink($target.'.gz');
+        }
 
         $phar = new \PharData($target, null, null, \Phar::TAR);
         $files = new ArchivableFilesFinder($sources, $excludes);

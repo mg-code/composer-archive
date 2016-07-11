@@ -23,10 +23,9 @@ class InstallCommand extends BaseCommand
     {
         $this->setDirectoriesFromInput($input);
 
-        $version = $this->getVersionFromLock();
-        $archive = $this->getLastArchiveByVersion($version);
+        $archive = $this->getArchive();
         if (!$archive) {
-            $output->writeln('<fg=red>Archive for version `'.$version.'` not found.</>');
+            $output->writeln('<fg=red>Archive not found.</>');
             return;
         }
 

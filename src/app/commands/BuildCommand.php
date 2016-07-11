@@ -24,23 +24,13 @@ class BuildCommand extends BaseCommand
         $this->setDirectoriesFromInput($input);
 
         $excludes = $this->getExcludes();
-        $version = $this->getVersionFromLock();
-
-        // Check if archive exists, if exists asks a question.
-        if($this->getLastArchiveByVersion($version)) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Archive already exists, create a new one? [y|n]:', false);
-            if (!$helper->ask($input, $output, $question)) {
-                return;
-            }
-        }
 
         $vendorDir = $this->getVendorDir();
         $archiveDir = $this->getArchiveDir();
 
         $archiver = new PharArchiver();
         $output->writeln('<fg=green>Archiving vendors..</>');
-        $result = $archiver->archive($vendorDir, $archiveDir, $version, $excludes);
+        $result = $archiver->archive($vendorDir, $archiveDir, $excludes);
         $output->writeln('<fg=green>Archive saved: '.$result.'</>');
     }
 
