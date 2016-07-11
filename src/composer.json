@@ -8,7 +8,8 @@
     "require": {
         "php": ">=5.4.0",
         "symfony/console": "v2.8.4",
-        "symfony/finder": "v2.8.4"
+        "symfony/finder": "v2.8.4",
+        "symfony/filesystem": "v2.8.4"
     },
     "config": {
         "process-timeout": 1800

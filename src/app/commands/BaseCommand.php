@@ -8,11 +8,9 @@ use Symfony\Component\Finder\Finder;
 
 abstract class BaseCommand extends Command
 {
-    protected $format = 'tar';
-
     private $_workingDir;
     private $_vendorDir;
-    private $_archiveDir;
+    private $_mirrorDir;
 
     /**
      * Adds working-dir option to command
@@ -45,32 +43,18 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Adds archive-dir option to command
+     * Adds mirror-dir option to command
      * @return void
      */
-    protected function addArchiveDirOption()
+    protected function addMirrorDirOption()
     {
         $this->addOption(
-            'archive-dir',
+            'mirror-dir',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Relative path to archive directory.',
-            'vendor-archive'
+            'Relative path to mirror directory.',
+            'vendor-mirror'
         );
-    }
-
-    /**
-     * Returns version hash from composer.lock
-     * @return string
-     * @throws \Exception
-     */
-    protected function getVersionFromLock()
-    {
-        $json = $this->readJson('composer.lock');
-        if (!isset($json['hash'])) {
-            throw new \Exception('Could not find hash in composer.lock file.');
-        }
-        return $json['hash'];
     }
 
     /**
@@ -93,27 +77,6 @@ abstract class BaseCommand extends Command
         }
         return $json;
     }
-
-    /**
-     * Returns archive location, if exists
-     * @return null|string
-     * @throws \Exception
-     */
-    protected function getArchive()
-    {
-        $finder = new Finder();
-        $finder
-            ->files()
-            ->name("vendors.tar.gz")
-            ->in($this->getArchiveDir());
-
-        foreach($finder as $file) {
-            /** @var \Symfony\Component\Finder\SplFileInfo $file */
-            return $file->getPathname();
-        }
-        return null;
-    }
-
     /**
      * Setter for working-dir
      * @param $value
@@ -162,27 +125,27 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Setter for archive-dir
+     * Setter for mirror-dir
      * @param $value
      */
-    protected function setArchiveDir($value)
+    protected function setMirrorDir($value)
     {
-        $this->_archiveDir = $this->getWorkingDir().'/'.$value;
+        $this->_mirrorDir = $this->getWorkingDir().'/'.$value;
     }
 
     /**
-     * Getter for archive-dir
+     * Getter for mirror-dir
      * @return string
      * @throws \Exception
      */
-    protected function getArchiveDir()
+    protected function getMirrorDir()
     {
-        if ($this->_archiveDir === null) {
-            throw new \Exception('`_archiveDir` is not set');
-        } else if (!file_exists($this->_archiveDir) || !is_dir($this->_archiveDir)) {
-            throw new \Exception('archive-dir does not exists:'.$this->_archiveDir);
+        if ($this->_mirrorDir === null) {
+            throw new \Exception('`_mirrorDir` is not set');
+        } else if (!file_exists($this->_mirrorDir) || !is_dir($this->_mirrorDir)) {
+            throw new \Exception('mirror-dir does not exists:'.$this->_mirrorDir);
         }
-        return $this->_archiveDir;
+        return $this->_mirrorDir;
     }
 
     /**
@@ -193,10 +156,10 @@ abstract class BaseCommand extends Command
     {
         $workingDir = $input->getOption('working-dir');
         $vendorDir = $input->getOption('vendor-dir');
-        $archiveDir = $input->getOption('archive-dir');
+        $mirrorDir = $input->getOption('mirror-dir');
 
         $this->setWorkingDir($workingDir);
         $this->setVendorDir($vendorDir);
-        $this->setArchiveDir($archiveDir);
+        $this->setMirrorDir($mirrorDir);
     }
 }

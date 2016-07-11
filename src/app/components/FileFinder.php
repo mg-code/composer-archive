@@ -1,20 +1,21 @@
 <?php
 
-namespace app\archiver;
+namespace app\components;
 
+use app\filters\ComposerExcludeFilter;
 use FilesystemIterator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * A Symfony Finder wrapper which locates files that should go into archives
+ * A Symfony Finder wrapper which locates files that should be mirrored
  * This class is taken from composer and customized.
  * This class does not handle .gitignore, .gitattribute and .hgignore files. Otherwise all files located in vendors directory are ignored.
  * @author Maris Graudins <maris@mg-interactive.lv>
  * @author Nils Adermann <naderman@naderman.de>
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class ArchivableFilesFinder extends \FilterIterator
+class FileFinder extends \FilterIterator
 {
     /**
      * @var Finder
@@ -23,7 +24,7 @@ class ArchivableFilesFinder extends \FilterIterator
 
     /**
      * Initializes the internal Symfony Finder with appropriate filters
-     * @param string $sources Path to source files to be archived
+     * @param string $sources Path to source files to be mirrored
      * @param array $excludes Composer's own exclude rules from composer.json
      */
     public function __construct($sources, array $excludes)

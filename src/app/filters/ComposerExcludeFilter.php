@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace app\archiver;
+namespace app\filters;
 
 /**
  * An exclude filter which processes composer's own exclude rules
